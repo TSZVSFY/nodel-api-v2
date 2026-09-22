@@ -1,4 +1,4 @@
-const secret = 'my_app_secret'
+const secret = process.env.JWT_SECRET || 'my_app_secret'
 const jwt = require('koa-jwt');
 
 // 无需校验权限的路由

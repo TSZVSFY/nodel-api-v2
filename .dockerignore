@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.env
+.env.docker
+.DS_Store
+.idea
+.vscode
+.git
+*.md
+Dockerfile
+docker-compose.yml
+nginx
+.env.example

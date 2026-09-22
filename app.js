@@ -1,3 +1,6 @@
+// 加载环境变量
+require('dotenv').config()
+
 const Koa = require('koa');
 const cors = require('@koa/cors')
 const router = require('./router/index')
@@ -24,6 +27,7 @@ app.use(cors()) // 跨域
   .use(router.routes()) // 注册路由
   .use(router.allowedMethods())
 
-app.listen(3000, () => {
-  console.log('http://localhost:3000')
+const PORT = process.env.PORT || 35550
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`)
 });

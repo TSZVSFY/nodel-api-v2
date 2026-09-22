@@ -1,19 +1,21 @@
 {
   "name": "novelapiv2",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Novel API v2 - Koa.js backend",
   "dependencies": {
     "@koa/cors": "^5.0.0",
     "cos-nodejs-sdk-v5": "^2.13.5",
     "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",

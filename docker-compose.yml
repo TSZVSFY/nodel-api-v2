@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # ====================
+  # MySQL 数据库
+  # ====================
+  mysql:
+    image: mysql:8.0
+    container_name: novel-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-novel}
+      TZ: Asia/Shanghai
+    ports:
+      - "3307:3306"
+    volumes:
+      - novel-mysql-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+    networks:
+      - novel-net
+
+  # ====================
+  # Redis 缓存
+  # ====================
+  redis:
+    image: redis:7-alpine
+    container_name: novel-redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - novel-redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+    networks:
+      - novel-net
+
+  # ====================
+  # Node.js API 后端
+  # ====================
+  api:
+    image: novel-api:latest
+    container_name: novel-api
+    restart: always
+    ports:
+      - "35550:35550"
+    environment:
+      PORT: 35550
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+      DB_NAME: ${DB_NAME:-novel}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET:-my_app_secret}
+      SMTP_HOST: ${SMTP_HOST:-smtp.163.com}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      COS_SECRET_ID: ${COS_SECRET_ID:-}
+      COS_SECRET_KEY: ${COS_SECRET_KEY:-}
+      COS_BUCKET: ${COS_BUCKET:-}
+      COS_REGION: ${COS_REGION:-}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - novel-net
+
+volumes:
+  novel-mysql-data:
+  novel-redis-data:
+
+networks:
+  novel-net:
+    driver: bridge

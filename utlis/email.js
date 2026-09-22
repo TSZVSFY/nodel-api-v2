@@ -1,6 +1,7 @@
 module.exports = function (email, username, code) {
+  const fromEmail = process.env.SMTP_USER || 'noreply@example.com'
   return {
-    from:  `"次元轻小说"<you41611@163.com>`,// 发件人
+    from:  `"次元轻小说"<${fromEmail}>`,// 发件人
     subject: '次元轻小说-密码找回',//邮箱主题
     to: email,//收件人，这里由post请求传递过来
     // 邮件内容，用html格式编写

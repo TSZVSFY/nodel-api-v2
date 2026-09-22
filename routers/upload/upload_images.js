@@ -20,11 +20,10 @@ async function uploadImages(ctx) {
 
   if (file.size > 5242880) return ctx.msg('图片大小不能超过5MB', 403)
 
-  // 存储桶名称，由bucketname-appid 组成，appid必须填入，可以在COS控制台查看存储桶名称。 https://console.cloud.tencent.com/cos5/bucket
-  const Bucket = 'sanye-1256143046';
-  // 存储桶Region可以在COS控制台指定存储桶的概览页查看 https://console.cloud.tencent.com/cos5/bucket/
-  // 关于地域的详情见 https://cloud.tencent.com/document/product/436/6224
-  const Region = 'ap-guangzhou';
+  // 存储桶名称（从环境变量读取）
+  const Bucket = process.env.COS_BUCKET || 'sanye-1256143046';
+  // 存储桶所在地域（从环境变量读取）
+  const Region = process.env.COS_REGION || 'ap-guangzhou';
 
   // 生成随机文件名
   const randomFileName = () => {
